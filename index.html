@@ -209,7 +209,7 @@
       ticketValue: 10,            // valor da cota
       winningNumber: null,        // número sorteado (null = não sorteado ainda)
       reservedGroups: [0, 0, 0],  // grupos reservados (0 = nenhum)
-      pixKey: "75981816830" // sua chave PIX aqui
+      pixKey: "75981816830 Nilton Cesar Gabriel Machado" // sua chave PIX aqui
     };
 
     const animals = [
@@ -318,7 +318,7 @@
       const message = encodeURIComponent(
         `Olá, meu ID do grupo é: ${idText}\n\n` +
         `Chave PIX para pagamento:\n${config.pixKey}\n\n` +
-        `Enviar o comprovante  pra atualizar seu grupo na  tabela nome: Nilton Cesar Gabriel Machado`
+        `Enviar o comprovante  pra atualizar seu grupo na  tabela`
       );
       document.getElementById("whatsappLink").href = `https://wa.me/${phoneNumber}?text=${message}`;
     }
