@@ -124,37 +124,52 @@
       font-size: 12px;
     }
 
-    .id-section {
+    .confirmation-section {
       margin-top: 20px;
       padding: 15px;
-      background: #e8f5e9;
-      border-left: 5px solid #2e7d32;
+      background: #fff3cd;
       border-radius: 8px;
-      font-size: 14px;
+      border-left: 5px solid #ffc107;
+      display: none;
       text-align: center;
-      display: none; /* começa escondido */
     }
 
-    .id-code {
-      font-size: 18px;
+    .confirmation-message {
+      margin-bottom: 15px;
       font-weight: bold;
-      color: #2e7d32;
-      margin-top: 8px;
     }
 
-    #whatsappLink {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 8px 12px;
-      background: #25d366;
+    .confirmation-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-yes {
+      background: #28a745;
       color: white;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: bold;
     }
 
-    #whatsappLink:hover {
-      background: #1ebe57;
+    .btn-yes:hover {
+      background: #218838;
+    }
+
+    .btn-no {
+      background: #dc3545;
+      color: white;
+    }
+
+    .btn-no:hover {
+      background: #c82333;
     }
 
     .no-winner {
@@ -193,12 +208,13 @@
       <p><strong>Como funciona:</strong> Escolha um grupo e confirme sua reserva.</p>
     </div>
     
-    <!-- 🔹 Seção que mostra o ID gerado -->
-    <div class="id-section" id="idSection">
-      <p>Seu ID de confirmação é:</p>
-      <div class="id-code" id="generatedId"></div>
-      <a id="whatsappLink" href="#" target="_blank">Enviar ID no WhatsApp</a>
-      <p>Copie e envie junto com seu comprovante no WhatsApp.</p>
+    <!-- 🔹 Seção de confirmação -->
+    <div class="confirmation-section" id="confirmationSection">
+      <div class="confirmation-message" id="confirmationMessage"></div>
+      <div class="confirmation-buttons">
+        <button class="btn btn-yes" id="btnYes">Sim</button>
+        <button class="btn btn-no" id="btnNo">Não</button>
+      </div>
     </div>
   </div>
   
@@ -209,7 +225,8 @@
       ticketValue: 5,            // valor da cota
       winningNumber: null,        // número sorteado (null = não sorteado ainda)
       reservedGroups: [25, 0, 0],  // grupos reservados (0 = nenhum)
-      pixKey: "75981816830 Nilton Cesar Gabriel Machado" // sua chave PIX aqui
+      pixKey: "75981816830 Nilton Cesar Gabriel Machado", // sua chave PIX aqui
+      whatsappNumber: "5575983728830" // número do WhatsApp
     };
 
     const animals = [
@@ -220,11 +237,18 @@
       "TOURO", "TIGRE", "URSO", "VEADO", "VACA"
     ];
 
+    let selectedGroup = null;
+    let generatedId = null;
+
     function init() {
       document.getElementById("premiumValue").textContent = config.premiumValue;
       document.getElementById("ticketValue").textContent = config.ticketValue;
       generateBlocks();
       updateWinnerDisplay();
+      
+      // Configurar eventos dos botões
+      document.getElementById("btnYes").addEventListener("click", confirmSelection);
+      document.getElementById("btnNo").addEventListener("click", cancelSelection);
     }
 
     function generateBlocks() {
@@ -255,26 +279,73 @@
           block.classList.add("reserved");
         } else {
           block.addEventListener("click", () => {
-            const randomId = generateRandomId();
-            const idText = `GRUPO-${i}-${animals[i-1]}-${randomId}`;
-
-            document.getElementById("generatedId").textContent = idText;
-            document.getElementById("idSection").style.display = "block";
-
-            // Atualiza link do WhatsApp
-            updateWhatsAppLink(idText);
-
-            // Copia automaticamente
-            navigator.clipboard.writeText(idText).then(() => {
-              alert("ID copiado! Agora envie pelo WhatsApp junto com seu comprovante.");
-            });
-
-            window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+            selectedGroup = i;
+            generatedId = generateRandomId();
+            showConfirmation(i, animals[i-1], numbers.join(", "), generatedId);
           });
         }
 
         blocksContainer.appendChild(block);
       }
+    }
+
+    function showConfirmation(groupNumber, animalName, numbers, id) {
+      const message = `Tem certeza que deseja enviar o grupo ${groupNumber} (${animalName}) com os números ${numbers} e ID ${id} pelo WhatsApp?`;
+      document.getElementById("confirmationMessage").textContent = message;
+      document.getElementById("confirmationSection").style.display = "block";
+      
+      // Rolagem suave para a seção de confirmação
+      document.getElementById("confirmationSection").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function confirmSelection() {
+      if (selectedGroup && generatedId) {
+        const numbers = getNumbersForGroup(selectedGroup);
+        const animalName = animals[selectedGroup-1];
+        const idText = `GRUPO-${selectedGroup}-${animalName}-${generatedId}`;
+        
+        // Copiar para a área de transferência
+        navigator.clipboard.writeText(idText);
+        
+        // Abrir WhatsApp
+        const message = encodeURIComponent(
+          `Olá, meu ID do grupo é: ${idText}\n\n` +
+          `Chave PIX para pagamento:\n${config.pixKey}\n\n` +
+          `Enviar o comprovante pra atualizar seu grupo na tabela`
+        );
+        
+        window.open(`https://wa.me/${config.whatsappNumber}?text=${message}`, '_blank');
+        
+        // Esconder a seção de confirmação
+        document.getElementById("confirmationSection").style.display = "none";
+        
+        // Resetar seleção
+        selectedGroup = null;
+        generatedId = null;
+      }
+    }
+
+    function cancelSelection() {
+      // Esconder a seção de confirmação
+      document.getElementById("confirmationSection").style.display = "none";
+      
+      // Resetar seleção
+      selectedGroup = null;
+      generatedId = null;
+    }
+
+    function getNumbersForGroup(groupNumber) {
+      const startNum = (groupNumber - 1) * 4 + 1;
+      const numbers = [];
+
+      for (let j = 0; j < 4; j++) {
+        let num = startNum + j;
+        if (num > 100) num = num - 100;
+        if (num === 100) num = 0;
+        numbers.push(num.toString().padStart(2, "0"));
+      }
+      
+      return numbers.join(", ");
     }
 
     function updateWinnerDisplay() {
@@ -313,17 +384,12 @@
       return result;
     }
 
-    function updateWhatsAppLink(idText) {
-      const phoneNumber = "5575983728830"; // substitua pelo seu número
-      const message = encodeURIComponent(
-        `Olá, meu ID do grupo é: ${idText}\n\n` +
-        `Chave PIX para pagamento:\n${config.pixKey}\n\n` +
-        `Enviar o comprovante  pra atualizar seu grupo na  tabela`
-      );
-      document.getElementById("whatsappLink").href = `https://wa.me/${phoneNumber}?text=${message}`;
-    }
-
     document.addEventListener("DOMContentLoaded", init);
   </script>
 </body>
 </html>
+
+
+
+      
+
