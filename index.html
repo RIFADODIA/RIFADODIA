@@ -4,6 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RIFA BRASIL</title>
+  <script>
+    // 🔹 CONFIGURAÇÕES EDITÁVEIS (agora no início do HTML)
+    const config = {
+      premiumValue: 100,          // valor do prêmio
+      ticketValue: 5,            // valor da cota
+      winningNumber: null,        // número sorteado (null = não sorteado ainda)
+      reservedGroups: [25, 0, 0],  // grupos reservados (0 = nenhum)
+      pixKey: "75981816830 Nilton Cesar Gabriel Machado", // sua chave PIX aqui
+      whatsappNumber: "5575983728830" // número do WhatsApp
+    };
+
+    const animals = [
+      "AVESTRUZ", "ÁGUIA", "BURRO", "BORBOLETA", "CACHORRO",
+      "CABRA", "CARNEIRO", "CAMELO", "COBRA", "COELHO",
+      "CAVALO", "ELEFANTE", "GALO", "GATO", "JACARÉ",
+      "LEÃO", "MACACO", "PORCO", "PAVÃO", "PERU",
+      "TOURO", "TIGRE", "URSO", "VEADO", "VACA"
+    ];
+
+    let selectedGroup = null;
+    let generatedId = null;
+  </script>
   <style>
     * {
       margin: 0;
@@ -116,14 +138,6 @@
       text-align: center;
     }
 
-    .instructions {
-      background: #e7f3ff;
-      padding: 10px;
-      border-radius: 6px;
-      margin-top: 12px;
-      font-size: 12px;
-    }
-
     .confirmation-section {
       margin-top: 20px;
       padding: 15px;
@@ -182,7 +196,7 @@
   <div class="container">
     <div class="header">
       <h1>RIFA SORTEIO QUANDO ENCHER 19:00</h1>
-      <p>SORTEIO BICHO AS 19:00 HORAS</p>
+      <p>SORTEIO  AS 19:00 HORAS</p>
     </div>
     
     <div class="welcome-message">
@@ -204,10 +218,6 @@
       <p><strong id="winnerNumber" class="no-winner">Aguardando sorteio...</strong></p>
     </div>
     
-    <div class="instructions">
-      <p><strong>Como funciona:</strong> Escolha um grupo e confirme sua reserva.</p>
-    </div>
-    
     <!-- 🔹 Seção de confirmação -->
     <div class="confirmation-section" id="confirmationSection">
       <div class="confirmation-message" id="confirmationMessage"></div>
@@ -219,27 +229,6 @@
   </div>
   
   <script>
-    // 🔹 CONFIGURAÇÕES EDITÁVEIS
-    const config = {
-      premiumValue: 100,          // valor do prêmio
-      ticketValue: 5,            // valor da cota
-      winningNumber: null,        // número sorteado (null = não sorteado ainda)
-      reservedGroups: [25, 0, 0],  // grupos reservados (0 = nenhum)
-      pixKey: "75981816830 Nilton Cesar Gabriel Machado", // sua chave PIX aqui
-      whatsappNumber: "5575983728830" // número do WhatsApp
-    };
-
-    const animals = [
-      "AVESTRUZ", "ÁGUIA", "BURRO", "BORBOLETA", "CACHORRO",
-      "CABRA", "CARNEIRO", "CAMELO", "COBRA", "COELHO",
-      "CAVALO", "ELEFANTE", "GALO", "GATO", "JACARÉ",
-      "LEÃO", "MACACO", "PORCO", "PAVÃO", "PERU",
-      "TOURO", "TIGRE", "URSO", "VEADO", "VACA"
-    ];
-
-    let selectedGroup = null;
-    let generatedId = null;
-
     function init() {
       document.getElementById("premiumValue").textContent = config.premiumValue;
       document.getElementById("ticketValue").textContent = config.ticketValue;
@@ -388,8 +377,3 @@
   </script>
 </body>
 </html>
-
-
-
-      
-
