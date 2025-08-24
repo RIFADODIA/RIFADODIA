@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RIFA BRASIL</title>
+  <title>RIFA BRASIL - Sorteio Diário</title>
   <script>
     // 🔹 CONFIGURAÇÕES EDITÁVEIS
     const config = {
@@ -31,171 +31,289 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
       min-height: 100vh;
-      padding: 15px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
     }
 
     .container {
       width: 100%;
       max-width: 500px;
       background: white;
-      border-radius: 10px;
-      padding: 15px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #1a2a6c, #b21f1f, #fdbb2d);
     }
 
     .header {
       text-align: center;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #f0f0f0;
     }
 
     h1 {
       color: #b21f1f;
-      margin-bottom: 5px;
-      font-size: 20px;
+      margin-bottom: 8px;
+      font-size: 24px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .header p {
+      color: #1a2a6c;
+      font-weight: 600;
+      font-size: 16px;
     }
 
     .welcome-message {
-      background: #e7f3ff;
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      font-size: 14px;
-      line-height: 1.4;
-      border-left: 4px solid #1a2a6c;
-      text-align: justify;
+      background: linear-gradient(to right, #e7f3ff, #d9e8ff);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 15px;
+      line-height: 1.5;
+      border-left: 5px solid #1a2a6c;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    .welcome-message p {
+      margin: 0;
+      color: #1a2a6c;
     }
 
     .prize-info {
-      background: #f0f8ff;
-      padding: 10px;
-      border-radius: 8px;
-      margin-bottom: 15px;
+      background: linear-gradient(to right, #f0f8ff, #e3f2ff);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
       text-align: center;
       border: 2px dashed #1a2a6c;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .prize-info::before {
+      content: '🎯';
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      font-size: 20px;
+      opacity: 0.2;
+    }
+
+    .prize-info::after {
+      content: '💰';
+      position: absolute;
+      bottom: -10px;
+      right: -10px;
+      font-size: 20px;
+      opacity: 0.2;
+    }
+
+    .prize-info h2 {
+      color: #b21f1f;
+      margin-bottom: 8px;
+      font-size: 22px;
+    }
+
+    .prize-info p {
+      color: #1a2a6c;
+      font-weight: 600;
+      font-size: 16px;
     }
 
     .blocks-container {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-bottom: 15px;
+      gap: 10px;
+      margin-bottom: 20px;
     }
 
     .block {
-      background: #e3f2fd;
+      background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
       border: 2px solid #1a2a6c;
-      border-radius: 6px;
+      border-radius: 8px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 10px 5px;
-      min-height: 70px;
-      transition: all 0.2s;
+      padding: 12px 5px;
+      min-height: 80px;
+      transition: all 0.3s ease;
       cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .block::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: #1a2a6c;
+      opacity: 0.3;
     }
 
     .block:hover {
-      transform: scale(1.05);
-      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.15);
     }
 
     .block-numbers {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: bold;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
       text-align: center;
+      color: #1a2a6c;
     }
 
     .block-animal {
-      font-size: 11px;
+      font-size: 12px;
       text-align: center;
-      font-weight: 500;
+      font-weight: 600;
+      color: #b21f1f;
     }
 
     .block.reserved {
-      background: #ffcdd2;
+      background: linear-gradient(to bottom, #ffcdd2, #ef9a9a);
       color: #666;
       border-color: #b21f1f;
       cursor: not-allowed;
     }
     
     .block.winner {
-      background: #c8e6c9;
+      background: linear-gradient(to bottom, #c8e6c9, #a5d6a7);
       color: #2e7d32;
       border-color: #2e7d32;
-      box-shadow: 0 0 10px rgba(46, 125, 50, 0.5);
+      box-shadow: 0 0 15px rgba(46, 125, 50, 0.5);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
     }
 
     .winner-section {
-      background: #fff8e1;
-      padding: 10px;
-      border-radius: 8px;
-      margin-top: 15px;
+      background: linear-gradient(to right, #fff8e1, #ffecb3);
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
       text-align: center;
+      border-left: 5px solid #ffa000;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    }
+
+    .winner-section h3 {
+      color: #b21f1f;
+      margin-bottom: 10px;
+      font-size: 18px;
     }
 
     .confirmation-section {
-      margin-top: 20px;
-      padding: 15px;
-      background: #fff3cd;
-      border-radius: 8px;
+      margin-top: 25px;
+      padding: 20px;
+      background: linear-gradient(to right, #fff3cd, #ffecb3);
+      border-radius: 10px;
       border-left: 5px solid #ffc107;
       display: none;
       text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
 
     .confirmation-message {
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       font-weight: bold;
+      color: #856404;
+      font-size: 16px;
+      line-height: 1.4;
     }
 
     .confirmation-buttons {
       display: flex;
-      gap: 10px;
+      gap: 15px;
       justify-content: center;
     }
 
     .btn {
-      padding: 10px 20px;
+      padding: 12px 25px;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.3s;
+      font-size: 16px;
+      min-width: 100px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
     .btn-yes {
-      background: #28a745;
+      background: linear-gradient(to bottom, #28a745, #218838);
       color: white;
     }
 
     .btn-yes:hover {
-      background: #218838;
+      background: linear-gradient(to bottom, #218838, #1e7e34);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(0,0,0,0.15);
     }
 
     .btn-no {
-      background: #dc3545;
+      background: linear-gradient(to bottom, #dc3545, #c82333);
       color: white;
     }
 
     .btn-no:hover {
-      background: #c82333;
+      background: linear-gradient(to bottom, #c82333, #bd2130);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(0,0,0,0.15);
     }
 
     .no-winner {
       font-style: italic;
       color: #888;
+      font-size: 16px;
+    }
+
+    #winnerNumber {
+      font-size: 18px;
+      color: #b21f1f;
+      font-weight: bold;
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 20px;
+      color: white;
+      font-size: 14px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
     }
   </style>
 </head>
@@ -207,10 +325,7 @@
     </div>
     
     <div class="welcome-message">
-      <p><strong>Seja bem-vindo!</strong> Clique no grupo que deseja. 
-      Ao clicar, você receberá um <strong>ID com seu grupo</strong>. 
-      Copie esse ID e informe na página <strong>Iniciar do aplicativo</strong> pelo WhatsApp, 
-      junto com o comprovante de pagamento.</p>
+      <p><strong>Seja bem-vindo!</strong> Clique no grupo que deseja e em seguida escolha SIM ou NÃO para enviar e deixar reservado aqui na página. Obrigado a todos pela contribuição!</p>
     </div>
     
     <div class="prize-info">
@@ -233,6 +348,10 @@
         <button class="btn btn-no" id="btnNo">Não</button>
       </div>
     </div>
+  </div>
+  
+  <div class="footer-note">
+    RIFA BRASIL © 2023 - Todos os direitos reservados
   </div>
   
   <script>
@@ -338,7 +457,7 @@
     }
 
     function showConfirmation(groupNumber, animalName, numbers, id) {
-      const message = `Tem certeza que deseja enviar o grupo ${groupNumber} (${animalName}) com os números ${numbers} e ID ${id} pelo WhatsApp?`;
+      const message = `Tem certeza que deseja reservar o grupo ${groupNumber} (${animalName}) com os números ${numbers}? Seu ID de confirmação é: ${id}`;
       document.getElementById("confirmationMessage").textContent = message;
       document.getElementById("confirmationSection").style.display = "block";
       
@@ -357,9 +476,10 @@
         
         // Abrir WhatsApp
         const message = encodeURIComponent(
-          `Olá, meu ID do grupo é: ${idText}\n\n` +
+          `Olá, gostaria de reservar o grupo ${selectedGroup} (${animalName})\n` +
+          `Meu ID de confirmação é: ${idText}\n\n` +
           `Chave PIX para pagamento:\n${config.pixKey}\n\n` +
-          `Enviar o comprovante pra atualizar seu grupo na tabela`
+          `aguardando o comprovante: seu grupo já foi reservado na rifa no site .`
         );
         
         window.open(`https://wa.me/${config.whatsappNumber}?text=${message}`, '_blank');
