@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RIFA BRASIL</title>
   <script>
-    // 🔹 CONFIGURAÇÕES EDITÁVEIS (agora no início do HTML)
+    // 🔹 CONFIGURAÇÕES EDITÁVEIS
     const config = {
       premiumValue: 100,          // valor do prêmio
       ticketValue: 5,            // valor da cota
       winningNumber: null,        // número sorteado (null = não sorteado ainda)
-      reservedGroups: [25, 0, 0],  // grupos reservados (0 = nenhum)
+      reservedGroups: "[1] [2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14] [15] [16] [17] [18] [19] [20] [21] [22] [23] [24] [.25]",  // string com grupos reservados
       pixKey: "75981816830 Nilton Cesar Gabriel Machado", // sua chave PIX aqui
       whatsappNumber: "5575983728830" // número do WhatsApp
     };
@@ -129,6 +129,13 @@
       border-color: #b21f1f;
       cursor: not-allowed;
     }
+    
+    .block.winner {
+      background: #c8e6c9;
+      color: #2e7d32;
+      border-color: #2e7d32;
+      box-shadow: 0 0 10px rgba(46, 125, 50, 0.5);
+    }
 
     .winner-section {
       background: #fff8e1;
@@ -196,7 +203,7 @@
   <div class="container">
     <div class="header">
       <h1>RIFA SORTEIO QUANDO ENCHER 19:00</h1>
-      <p>SORTEIO  AS 19:00 HORAS</p>
+      <p>SORTEIO BICHO AS 19:00 HORAS</p>
     </div>
     
     <div class="welcome-message">
@@ -244,6 +251,9 @@
       const blocksContainer = document.getElementById("blocksContainer");
       blocksContainer.innerHTML = "";
 
+      // Converter a string de grupos reservados em array
+      const reservedGroups = parseReservedGroups(config.reservedGroups);
+
       for (let i = 1; i <= 25; i++) {
         const block = document.createElement("div");
         block.className = "block";
@@ -264,7 +274,8 @@
           <div class="block-animal">${animals[i-1]}</div>
         `;
 
-        if (config.reservedGroups.includes(i)) {
+        // Verificar se o grupo está reservado (tem um ponto em qualquer posição dentro dos colchetes)
+        if (reservedGroups.includes(i)) {
           block.classList.add("reserved");
         } else {
           block.addEventListener("click", () => {
@@ -274,8 +285,56 @@
           });
         }
 
+        // Verificar se este grupo é o vencedor
+        if (config.winningNumber !== null && config.winningNumber !== undefined && config.winningNumber !== "") {
+          let groupNumber;
+          let winningNumber = config.winningNumber;
+          
+          if (winningNumber === 0) winningNumber = 100;
+          
+          if (winningNumber % 4 === 0) {
+            groupNumber = winningNumber / 4;
+          } else {
+            groupNumber = Math.ceil(winningNumber / 4);
+          }
+          
+          if (winningNumber === 100) groupNumber = 25;
+          
+          if (i === groupNumber) {
+            block.classList.add("winner");
+            // Remover a classe reserved se for o vencedor
+            block.classList.remove("reserved");
+          }
+        }
+
         blocksContainer.appendChild(block);
       }
+    }
+
+    function parseReservedGroups(reservedString) {
+      const reservedArray = [];
+      
+      // Procurar por padrões como [.2], [2.], [2., etc.
+      const regex = /\[([^\]]*\.?[^\]]*)\]/g;
+      let match;
+      
+      while ((match = regex.exec(reservedString)) !== null) {
+        const content = match[1]; // Conteúdo dentro dos colchetes
+        
+        // Verificar se há um ponto em qualquer posição
+        if (content.includes('.')) {
+          // Extrair apenas os dígitos numéricos
+          const numberMatch = content.match(/\d+/);
+          if (numberMatch) {
+            const number = parseInt(numberMatch[0]);
+            if (!isNaN(number) && number >= 1 && number <= 25) {
+              reservedArray.push(number);
+            }
+          }
+        }
+      }
+      
+      return reservedArray;
     }
 
     function showConfirmation(groupNumber, animalName, numbers, id) {
